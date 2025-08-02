@@ -10,6 +10,7 @@ error_reporting(E_ALL);
 
 include dirname(__DIR__) . '/vendor/autoload.php';
 
+use Balpom\Entity\Structures\AbstractStructure;
 use Balpom\Entity\Entities\AbstractEntity;
 use Balpom\Entity\Collections\EntitySet;
 use Balpom\Entity\Structures\Id;
@@ -35,7 +36,7 @@ class Profession extends AbstractEntity
 
 }
 
-class Workers extends Elements
+class Workers extends AbstractStructure
 {
     protected static function fields(): void
     {
@@ -45,7 +46,7 @@ class Workers extends Elements
 
 }
 
-class SimpleCreator extends Creator
+class SimpleCreator extends AbstractCreator
 {
     public function create(): string
     {
@@ -55,7 +56,7 @@ class SimpleCreator extends Creator
 
         $professions = $xml->createElement('professions');
 
-        $items = $this->elements->getProfessions();
+        $items = $this->structure->getProfessions();
         foreach ($items as $item) {
             $job = $xml->createElement('job', $item->getTitle());
             $id = $item->getId();
@@ -66,7 +67,7 @@ class SimpleCreator extends Creator
 
         $persons = $xml->createElement('persons');
 
-        $items = $this->elements->getPersons();
+        $items = $this->structure->getPersons();
         foreach ($items as $item) {
             $human = $xml->createElement('person');
             $id = $item->getId();
