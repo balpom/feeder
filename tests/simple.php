@@ -46,41 +46,35 @@ class Workers extends AbstractStructure
 
 }
 
-class SimpleCreator extends AbstractCreator
+class SimpleCreator extends XmlCreator
 {
     public function create(): string
     {
-        $xml = new \DOMDocument('1.0', 'UTF-8');
-        $xml->formatOutput = true;
-        $list = $xml->createElement('workers_list');
+        $list = $this->xml->createElement('workers_list');
 
-        $professions = $xml->createElement('professions');
+        $professions = $this->xml->createElement('professions');
 
         $items = $this->structure->getProfessions();
         foreach ($items as $item) {
-            $job = $xml->createElement('job', $item->getTitle());
+            $job = $this->xml->createElement('job', $item->getTitle());
             $id = $item->getId();
             $job->setAttribute('id', $id);
             $job->setIdAttribute('id', true);
             $professions->appendChild($job);
         }
 
-        $persons = $xml->createElement('persons');
+        $persons = $this->xml->createElement('persons');
 
         $items = $this->structure->getPersons();
         foreach ($items as $item) {
-            $human = $xml->createElement('person');
+            $human = $this->xml->createElement('person');
             $id = $item->getId();
             $human->setAttribute('id', $id);
             $human->setIdAttribute('id', true);
 
-            $name = $xml->createElement('name', $item->getName());
-            $surname = $xml->createElement('name', $item->getSurname());
-            $jobId = $xml->createElement('job_id', $item->getJobId());
-
-            $human->appendChild($name);
-            $human->appendChild($surname);
-            $human->appendChild($jobId);
+            $this->appendElement($human, 'name', $item->getName());
+            $this->appendElement($human, 'surname', $item->getSurname());
+            $this->appendElement($human, 'job_id', $item->getJobId());
 
             $persons->appendChild($human);
         }
@@ -88,9 +82,9 @@ class SimpleCreator extends AbstractCreator
         $list->appendChild($professions);
         $list->appendChild($persons);
 
-        $xml->appendChild($list);
+        $this->xml->appendChild($list);
 
-        return $xml->saveXML();
+        return $this->xml->saveXML();
     }
 
 }
@@ -114,6 +108,7 @@ $creator = new SimpleCreator($workers);
 echo $creator->create();
 
 /* Must be printed:
+
 <?xml version="1.0" encoding="UTF-8"?>
 <workers_list>
   <professions>
@@ -125,27 +120,27 @@ echo $creator->create();
   <persons>
     <person id="111">
       <name>Vasya</name>
-      <name>Pupkin</name>
+      <surname>Pupkin</name>
       <job_id>dir</job_id>
     </person>
     <person id="222">
       <name>Kolya</name>
-      <name>Morkovkin</name>
+      <surname>Morkovkin</name>
       <job_id>wld</job_id>
     </person>
     <person id="333">
       <name>Petya</name>
-      <name>Vasechkin</name>
+      <surname>Vasechkin</name>
       <job_id>prg</job_id>
     </person>
     <person id="444">
       <name>John</name>
-      <name>Doe</name>
+      <surname>Doe</name>
       <job_id>acc</job_id>
     </person>
     <person id="555">
       <name>Donald</name>
-      <name>Smith</name>
+      <surname>Smith</name>
       <job_id>prg</job_id>
     </person>
   </persons>
