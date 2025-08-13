@@ -19,7 +19,7 @@ abstract class XmlCreator extends AbstractCreator
         parent::__construct($structure);
     }
 
-    protected function getDOMDocument(string $version = '1.0', string $encoding = ''): Document
+    protected function getDOMDocument(string $version = '1.0', string $encoding = 'UTF-8'): Document
     {
         $xml = new Document($version, $encoding);
         $xml->formatOutput = true;
