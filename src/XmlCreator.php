@@ -33,4 +33,28 @@ abstract class XmlCreator extends AbstractCreator
         $element->appendChild($newElement);
     }
 
+    protected function appendNotEmptyElement(Element &$element, string $name, string|null $value = null): void
+    {
+        if (!empty($value)) {
+            $newElement = $this->xml->createElement($name, $value);
+            $element->appendChild($newElement);
+        }
+    }
+
+    protected function appendNotEmptyChild(Element &$element, Element|null $child): void
+    {
+        if (!empty($child)) {
+            $element->appendChild($child);
+        }
+    }
+
+    protected function isEmpty(\Countable|null $countable): bool
+    {
+        if (empty($countable) || 0 === count($countable)) {
+            return true;
+        }
+
+        return false;
+    }
+
 }
